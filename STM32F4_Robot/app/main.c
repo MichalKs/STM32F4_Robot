@@ -22,6 +22,7 @@
 #include <led.h>
 #include <comm.h>
 #include <keys.h>
+#include <ir.h>
 
 #define SYSTICK_FREQ 1000 ///< Frequency of the SysTick set at 1kHz.
 #define COMM_BAUD_RATE 115200UL ///< Baud rate for communication with PC
@@ -68,6 +69,11 @@ int main(void) {
   // test another way of measuring time delays
   uint32_t softTimer = TIMER_GetTime(); // get start time for delay
 
+  IR_Init(); // Initialize IR signals decoding
+  uint8_t toggle, command, address;
+
+  MOTOR_Init();
+
   while (1) {
 
     // test delay method
@@ -96,6 +102,31 @@ int main(void) {
     }
 
     TIMER_SoftTimersUpdate(); // run timers
+    if (IR_Event(&command, &address, &toggle)) {
+      println("Frame received: Toggle = %d Command = %d Address = %d",
+           toggle, command, address);
+
+      switch (command) {
+
+      case 32:
+        println("Forward\n");
+        MOTOR_MoveForward();
+        break;
+
+      case 33:
+        println("Backwards\n");
+        MOTOR_MoveBackwards();
+        break;
+
+      case 12:
+        MOTOR_Stop();
+
+      default:
+        ;
+
+      }
+
+    }
 //    KEYS_Update(); // run keyboard
   }
 }
@@ -126,6 +157,6 @@ void softTimerCallback(void) {
 
   }
 
-  println("Test string sent from STM32F4!!!"); // Print test string
+//  println("Test string sent from STM32F4!!!"); // Print test string
   counter++;
 }
