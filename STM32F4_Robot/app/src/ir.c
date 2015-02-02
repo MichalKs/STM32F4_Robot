@@ -151,7 +151,7 @@ void IR_RxData(uint16_t pulseWidth, uint8_t edge) {
     return;
   } else if (pulseCount == 0 && edge == 0) {
     // frame should start with falling edge
-    println("Frame error - wrong edge");
+//    println("Frame error - wrong edge");
     IR_ResetFrame();
     return;
   }

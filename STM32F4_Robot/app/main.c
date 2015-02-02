@@ -69,10 +69,20 @@ int main(void) {
   // test another way of measuring time delays
   uint32_t softTimer = TIMER_GetTime(); // get start time for delay
 
-  IR_Init(); // Initialize IR signals decoding
+//  IR_Init(); // Initialize IR signals decoding
   uint8_t toggle, command, address;
 
-  MOTOR_Init();
+//  MOTOR_Init();
+
+  PING_Init();
+
+  while (1) {
+    PING_Read();
+    TIMER_Delay(1000);
+    LED_Toggle(LED3);
+
+  }
+
 
   while (1) {
 

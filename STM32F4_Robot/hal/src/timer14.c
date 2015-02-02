@@ -33,22 +33,22 @@ void TIMER14_Init(void) {
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
 
   TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-  TIM_TimeBaseStructure.TIM_Prescaler = 0;
+  TIM_TimeBaseStructure.TIM_Prescaler = 83;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-  TIM_TimeBaseStructure.TIM_Period = 84; // overflow every microsecond
+  TIM_TimeBaseStructure.TIM_Period = 0xffff; // 84 overflow every microsecond
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
   TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
 
   // initialize interrupt
-  NVIC_InitTypeDef NVIC_InitStructure;
-  NVIC_InitStructure.NVIC_IRQChannel = TIM8_TRG_COM_TIM14_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-  TIM_ITConfig(TIM14, TIM_IT_Update, ENABLE);
+//  NVIC_InitTypeDef NVIC_InitStructure;
+//  NVIC_InitStructure.NVIC_IRQChannel = TIM8_TRG_COM_TIM14_IRQn;
+//  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+//  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+//  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//  NVIC_Init(&NVIC_InitStructure);
+//
+//  TIM_ITConfig(TIM14, TIM_IT_Update, ENABLE);
 
   TIM_Cmd(TIM14, ENABLE); // enable timer
 }
@@ -58,7 +58,12 @@ void TIMER14_Init(void) {
  */
 uint32_t TIMER14_GetTime(void) {
 
-  return usCount;
+  return TIM_GetCounter(TIM14);
+
+}
+void TIMER14_ZeroTime(void) {
+
+  TIM_SetCounter(TIM14, 0);
 
 }
 /**
