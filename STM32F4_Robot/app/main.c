@@ -102,6 +102,7 @@ int main(void) {
     }
 
     TIMER_SoftTimersUpdate(); // run timers
+
     if (IR_Event(&command, &address, &toggle)) {
       println("Frame received: Toggle = %d Command = %d Address = %d",
            toggle, command, address);
@@ -109,25 +110,33 @@ int main(void) {
       switch (command) {
 
       case 32:
-        println("Forward\n");
         MOTOR_MoveForward();
         break;
 
       case 33:
-        println("Backwards\n");
         MOTOR_MoveBackwards();
+        break;
+
+      case 16:
+        MOTOR_MoveRight();
+        break;
+
+      case 17:
+        MOTOR_MoveLeft();
         break;
 
       case 12:
         MOTOR_Stop();
+        break;
 
       default:
-        ;
+        MOTOR_Stop();
 
       }
 
     }
-//    KEYS_Update(); // run keyboard
+
+    MOTOR_Update();
   }
 }
 
